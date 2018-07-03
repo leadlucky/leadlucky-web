@@ -1,23 +1,21 @@
 package murraco.controller;
 
+import murraco.dto.DateCountAggregate;
 import murraco.exception.CustomException;
-import murraco.model.CollectedEmail;
 import murraco.model.Page;
-import murraco.model.PageView;
 import murraco.model.User;
 import murraco.repository.PageRepository;
 import murraco.repository.UserRepository;
-import murraco.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/pages")
@@ -29,28 +27,52 @@ public class PageController {
     @Autowired
     private PageRepository pageRepository;
 
-    @GetMapping(value = "/{pageName}/data")
-    public String getPageData(@PathVariable String pageName, HttpServletRequest req) {
-        Page page = pageRepository.findByName(pageName)
-                .orElseThrow(() -> new CustomException(
-                        "No page found with name " + pageName,
-                        HttpStatus.NOT_FOUND
-                ));
+    @GetMapping(value = "/{pageName}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
+    public Page getPage(@PathVariable String pageName) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return pageRepository.findByOwnerUsernameAndName(auth.getName(), pageName)
+                .orElseThrow(() -> new CustomException("" +
+                        "No page found with name: " + pageName + " for user " + auth.getName(),
+                        HttpStatus.NOT_FOUND));
+    }
 
-        // Extract client IP Address from request
-        String ipAddress = req.getHeader("X-FORWARDED-FOR");
-        if (ipAddress == null)
-            ipAddress = req.getRemoteAddr();
 
-        // Create page view to record IP and timestamp
-        PageView pageView = new PageView();
-        pageView.setIpAddress(ipAddress);
+    @GetMapping(value = "/{pageName}/countData/month/{date}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
+    public Map<String, List<DateCountAggregate>> getPageTimeData(
+            @PathVariable String pageName,
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM") Date date) throws ParseException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!pageRepository.existsByOwnerUsernameAndName(auth.getName(), pageName)) {
+            throw new CustomException(
+                    "User " + auth.getName() + " does not own the page " + pageName,
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
 
-        // Persist the page view
-        page.addView(pageView);
-        pageRepository.save(page);
+        Calendar endDateCal = Calendar.getInstance();
+        endDateCal.setTime(date);
+        endDateCal.add(Calendar.MONTH, 1);
+        Date endDate = Date.from(endDateCal.toInstant());
 
-        return page.getData();
+        List<DateCountAggregate> views = pageRepository.findDailyPageViewCounts(pageName, date, endDate);
+        Map<String, List<DateCountAggregate>> response = new HashMap<>();
+        response.put("views", views);
+        // TODO aggregate emails
+        return response;
+    }
+
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
+    public List<Page> getUserPages() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userRepository.findByUsername(auth.getName())
+                .orElseThrow(CustomException.getUserNotFoundHandler(auth.getName()));
+
+        return user.getPages();
     }
 
     @PostMapping
@@ -70,7 +92,6 @@ public class PageController {
             return false;
         }
     }
-
 
 
 }

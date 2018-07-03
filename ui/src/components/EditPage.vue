@@ -71,11 +71,11 @@
   import PreviewPage from './PreviewPage';
   import Draggable from "./Draggable";
 
-  const {validationMixin} = require('@leadlucky/leadlucky-themes');
+  import {validationMixin}  from '@leadlucky/leadlucky-themes';
   import axios from 'axios'
 
   import auth from '../auth'
-  const themes = require('@leadlucky/leadlucky-themes')
+  import themes from '../../../../themes'
 
   import store from '../store';
 

@@ -97,16 +97,7 @@ public class UserController {
 
 
 
-    @GetMapping(value = "/me/pages")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
-    public List<Page> getUserPages() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userRepository.findByUsername(auth.getName())
-                .orElseThrow(CustomException.getUserNotFoundHandler(auth.getName()));
-
-        return user.getPages();
-    }
 
     @PostMapping(value = "/upgrade")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")

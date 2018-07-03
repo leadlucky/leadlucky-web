@@ -1,6 +1,6 @@
 {
   "name": "@leadlucky/leadlucky-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "landing pages",
   "author": "steven.landow",
   "scripts": {
@@ -9,13 +9,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "@leadlucky/leadlucky-themes": "^1.0.2",
+    "@leadlucky/leadlucky-themes": "^1.0.5",
     "axios": "^0.18.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-stripe": "^0.1.52",
     "vue-stripe-checkout": "^1.0.7",
-    "vuetify": "^1.1.0"
+    "vuetify": "^1.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -35,6 +35,7 @@
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
     "node-notifier": "^5.1.2",
+    "node-sass": "^4.9.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
@@ -42,12 +43,14 @@
     "postcss-loader": "^2.1.5",
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
+    "sass-loader": "^7.0.3",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
+    "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^0.5.8",
     "vue-loader": "^13.7.2",
-    "vue-style-loader": "^3.0.1",
+    "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.12.0",
     "webpack-bundle-analyzer": "^2.13.1",

@@ -5,8 +5,8 @@ import store from './store'
 
 // URL and endpoint constants
 
-const LOGIN_URL = API_URL + 'users/signin'
-const SIGNUP_URL = API_URL + 'users/signup'
+const LOGIN_URL = window.leadlucky.apiUrl + 'users/signin'
+const SIGNUP_URL = window.leadlucky.apiUrl + 'users/signup'
 
 export default {
 

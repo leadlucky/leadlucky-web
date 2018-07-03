@@ -71,7 +71,7 @@
     methods: {
       fetchData() {
         axios.get(
-          window.leadlucky.apiUrl + 'users/me/pages',
+          window.leadlucky.apiUrl + 'pages',
           {headers: auth.getAuthHeader()}
         ).then((resp) => {
           this.pages = resp.data;

@@ -1,5 +1,5 @@
 <script>
-  import themes from '@leadlucky/leadlucky-themes'
+  import themes from '../../../../themes'
 
   export default {
     name: "preview-page",
@@ -37,7 +37,7 @@
       return createElement(this.component, {
         props: {propData: Object.assign({}, this.customData), themeName: this.themeName},
         attrs: {
-          style: `padding-top: ${this.fullscreen ? 0 : 64}px`
+          style: `padding: 0 0 0 0;`
         }
       })
     }
