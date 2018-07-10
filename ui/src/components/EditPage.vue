@@ -148,7 +148,7 @@
           headers: {"Authorization": "Bearer " + localStorage.getItem('access_token')}
         }).then(function (response) {
           if (response.data) {
-            this.$router.history.push('/dashboard')
+            self.$router.history.push('/dashboard')
           } else {
             self.errorText = 'Page name already taken.'
           }
