@@ -1,4 +1,4 @@
-package com.leadlucky.api.dto
+package com.leadlucky.api.model.api
 
 class ChargeDataDTO {
 

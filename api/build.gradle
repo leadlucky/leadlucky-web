@@ -25,16 +25,36 @@ repositories {
 
 
 dependencies {
-	compile("org.codehaus.groovy:groovy")
-	compile("org.springframework.boot:spring-boot-starter")
-	compile("org.springframework.boot:spring-boot-starter-web")
-	compile("org.springframework.boot:spring-boot-starter-data-jpa")
-	compile("org.springframework.boot:spring-boot-starter-security")
-	compile("org.springframework.boot:spring-boot-devtools")
-	compile("mysql:mysql-connector-java")
-	compile("io.jsonwebtoken:jjwt:0.7.0")
-	compile("org.modelmapper:modelmapper:1.1.0")
-	compile("com.stripe:stripe-java:5.36.0")
-	testCompile("org.springframework.boot:spring-boot-starter-test")
-	testCompile("org.springframework.security:spring-security-test")
+
+	// Spring
+	compile('org.springframework.boot:spring-boot-starter-web')
+    compile("org.springframework.boot:spring-boot-devtools")
+
+	// E-Mail
+	compile('org.springframework.boot:spring-boot-starter-mail')
+
+	// Security
+    compile("org.springframework.boot:spring-boot-starter-security")
+
+    compile('io.jsonwebtoken:jjwt:0.9.0')
+
+	// Database
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("mysql:mysql-connector-java")
+
+    // Stripe
+    compile("com.stripe:stripe-java:5.36.0")
+
+    // Groovy Lang
+    compile("org.codehaus.groovy:groovy")
+
+
+    // Test
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.security:spring-security-test')
+
+
+    //TODO remove
+    compile("org.modelmapper:modelmapper:1.1.0")
+
 }

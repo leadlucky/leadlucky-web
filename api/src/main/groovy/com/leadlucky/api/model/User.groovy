@@ -1,44 +1,57 @@
 package com.leadlucky.api.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 
-
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.ElementCollection
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.OneToMany
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
-import java.util.ArrayList
-import java.util.List
 
 @Entity
 class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id
+    String id
 
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    List<Role> roles
-
-    @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
+    @NotBlank
+    @Size(min = 4, message = "Minimum password length: 4 characters")
     @Column(unique = true, nullable = false)
     String username
 
-    @Column(unique = true, nullable = false)
-    String email
-
-    @Column(unique = true)
-    @JsonIgnore
-    String stripeCustomerId
-
-    @Column
-    String premiumStatus
-
+    @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 8, message = "Minimum password length: 8 characters")
     String password
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-    List<Page> pages = new ArrayList<>()
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    String email
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    boolean emailVerified
+
+    @JsonIgnore
+    String emailToken
+
+    @JsonIgnore
+    String stripeCustomerId
+
+    String premiumStatus
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<Role> roles = []
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    List<Page> pages = []
 
     void addPage(Page page) {
         page.owner = this

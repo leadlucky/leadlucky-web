@@ -41,7 +41,10 @@ class PublicInfoController {
         page.addView(pageView)
         pageRepository.save(page)
 
-        return ResponseEntity.ok(page.data)
+        return ResponseEntity
+                .ok()
+                .header("Content-Type", "application/json")
+                .body(page.data)
     }
 
     @PostMapping(value = "/{pageName}/email")
