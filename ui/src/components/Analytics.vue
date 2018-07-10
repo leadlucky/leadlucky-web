@@ -121,9 +121,12 @@ export default {
             return this.$route.params.pageName
         },
         chartInfo(){
-          return !this.chartData.value ? [] : [['Page Visit Data','Views'], ...this.chartData.value.views.map((dataPoint) =>
-            [dataPoint.timestamp, dataPoint.count]
-          )]
+          const headers = ['Page Visit Data','Views', 'Emails'];
+          const displayedData = this.chartData.value ? Object.keys(this.chartData.value).map(
+            (timestamp) => [timestamp, this.chartData.value[timestamp].views, this.chartData.value[timestamp].emails]
+          ) : []
+
+          return [headers, ...displayedData]
         }
     },
     methods: {
