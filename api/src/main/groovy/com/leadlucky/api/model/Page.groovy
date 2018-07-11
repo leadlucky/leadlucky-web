@@ -35,23 +35,9 @@ class Page {
     @JsonIgnore
     List<CollectedEmail> emails = new ArrayList<>()
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "page")
-    @JsonIgnore
-    List<PageView> views = new ArrayList<>()
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    int getViewCount(){
-        return views.size()
-    }
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     int getEmailCount(){
         return emails.size()
-    }
-
-    void addView(PageView pageView) {
-        pageView.page = this
-        views.add(pageView)
     }
 
     void addEmail(CollectedEmail email) {

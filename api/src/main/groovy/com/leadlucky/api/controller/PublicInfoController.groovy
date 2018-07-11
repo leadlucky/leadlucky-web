@@ -1,9 +1,9 @@
 package com.leadlucky.api.controller
 
+import com.google.api.services.analyticsreporting.v4.AnalyticsReporting
 import com.leadlucky.api.exception.CustomException
 import com.leadlucky.api.model.CollectedEmail
 import com.leadlucky.api.model.Page
-import com.leadlucky.api.model.PageView
 import com.leadlucky.api.repository.PageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -33,13 +33,7 @@ class PublicInfoController {
         if (ipAddress == null)
             ipAddress = req.remoteAddr
 
-        // Create page view to record IP and timestamp
-        PageView pageView = new PageView()
-        pageView.ipAddress = ipAddress
 
-        // Persist the page view
-        page.addView(pageView)
-        pageRepository.save(page)
 
         return ResponseEntity
                 .ok()
@@ -60,10 +54,14 @@ class PublicInfoController {
         }
         )
 
+
         page.addEmail(email)
         pageRepository.save(page)
 
-        return Collections.singletonMap("message", "Email address received.")
+
+        return [
+                message: "Email address received."
+        ]
     }
 
 }

@@ -5,14 +5,17 @@ import com.leadlucky.api.model.Page
 import com.leadlucky.api.model.User
 import com.leadlucky.api.repository.PageRepository
 import com.leadlucky.api.repository.UserRepository
+import com.leadlucky.api.service.AnalyticsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
+import javax.xml.ws.Response
 import java.text.ParseException
 
 @RestController
@@ -24,6 +27,9 @@ class PageController {
 
     @Autowired
     private PageRepository pageRepository
+
+    @Autowired
+    private AnalyticsService analyticsService
 
     @GetMapping(value = "/{pageName}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
@@ -40,9 +46,9 @@ class PageController {
 
     @GetMapping(value = "/{pageName}/countData/month/{date}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT') or hasRole('ROLE_PREMIUM')")
-    Map<String, Map<String, Long>> getPageTimeData(
+    ResponseEntity getPageTimeData(
             @PathVariable String pageName,
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM") Date date) throws ParseException {
+            @PathVariable String date) throws ParseException {
         Authentication auth = SecurityContextHolder.context.authentication
         if (!pageRepository.existsByOwnerUsernameAndName(auth.name, pageName)) {
             throw new CustomException(
@@ -51,7 +57,7 @@ class PageController {
             )
         }
 
-        return [:] // TODO analytics machine
+        return ResponseEntity.ok(analyticsService.getPageViewReport(pageName, date))
     }
 
 

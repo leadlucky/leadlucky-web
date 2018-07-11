@@ -48,6 +48,9 @@ dependencies {
     // Groovy Lang
     compile("org.codehaus.groovy:groovy")
 
+    // Analytics
+    compile("com.google.apis:google-api-services-analyticsreporting:v4-rev124-1.23.0")
+    compile("com.google.api-client:google-api-client-gson:1.23.0")
 
     // Test
 	testCompile('org.springframework.boot:spring-boot-starter-test')

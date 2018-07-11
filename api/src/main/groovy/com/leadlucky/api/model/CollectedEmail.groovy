@@ -18,6 +18,8 @@ class CollectedEmail {
     @Column(nullable = false)
     String email
 
+    String gaClientId
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Date createdDate
 

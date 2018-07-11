@@ -4,11 +4,11 @@ server:
   tomcat:
     accesslog:
       enabled: true
-      directory: access_logs
+      directory: /tmp/access_logs
+      pattern: "%a,%t,%m,%U"
 
-#security:
-#  ignored:
-#    - "*.bundle*"
+ga-app-name: leadlucky-api
+ga-key-path: leadlucky-dev.json
 
 token-expiration: 864_000_000 # 10 days
 token-gen-secret: fj&F0f+=jfn2n2nf
@@ -35,6 +35,6 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: steven@stlcomputerservices.com
-    password: 
+    password:
     protocol: smtp
 
