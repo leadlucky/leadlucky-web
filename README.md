@@ -15,6 +15,11 @@ You wil need to have:
 - Clone the themes project
     - Run `npm link` from the themes project
     - Run `npm link @leadlukcy/leadlucky-themes` from the ui directory in this project
-- Edit application.yaml to provide correct database and email credentials, and a path to the google api key json
+- Edit application.yaml
+    - database connection info
+    - email credentials (for signup and user verification)
+    - path to google api key json file
+    - google api app name
+    - google analytics view id
 - Google Analytics Secret Key json file
 

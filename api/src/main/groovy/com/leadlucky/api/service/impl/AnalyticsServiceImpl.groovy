@@ -6,6 +6,7 @@ import com.leadlucky.api.repository.EmailRepository
 import com.leadlucky.api.service.AnalyticsService
 import com.leadlucky.api.util.MapUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 import java.text.ParseException
@@ -13,8 +14,8 @@ import java.text.ParseException
 @Service
 class AnalyticsServiceImpl implements AnalyticsService {
 
-    private static final String GA_DATE = "ga:date"
-    private static final String GA_DATE_HOUR = "ga:date"
+    static final String GA_DATE = "ga:date"
+    static final String GA_DATE_HOUR = "ga:dateHour"
 
     // 1 = YEAR, 2 = MONTH, 3 = DAY_OF_MONTH (from java.util.Calendar)
     private static final Map<Integer, String> intervalFormats = [
@@ -35,57 +36,60 @@ class AnalyticsServiceImpl implements AnalyticsService {
     @Autowired
     private EmailRepository emailRepositoy
 
-    Map getPageViewReport(String pageName, String date) {
+    @Value('${ga-view-id}')
+    private String GA_VIEW_ID
 
-        // Break down hourly if it is a day's report, otherwise breakdown daily
-        def timeDimension = intervalDimensions[getInterval(date)]
-        def outputFormat = "yyyyMMdd${timeDimension == GA_DATE ? "" : "HH"}"
-        def entryFormat = "MM-dd-yyyy${timeDimension == GA_DATE ? "" : " HH:00"}"
-        def dateRange = getDateRange(date)
+    // TODO fill in zeroes for blank hours/days
+    Map getPageReport(String pageName, String date) {
+        def params = [
+                pageName,
+                getDateRange(date),
+                intervalDimensions[getInterval(date)]
+        ]
+
+        // Merge email counts with view counts
+        // and convert maps of timestamp -> count
+        // to have inner maps with metric names
+        return MapUtil.merge(
+                getViewCounts(*params).collect({ts, vc -> [ts, [views: vc]]}).collectEntries(),
+                getEmailCounts(*params).collect({ts, ec -> [ts, [emails: ec]]}).collectEntries()
+        )
+    }
+
+    Map getViewCounts(String pageName, DateRange dateRange, String timeDimension) {
+        // Decide whether the query results will include an hour we will need to parse
+        def outputFormat = "yyyyMMdd${timeDimension == GA_DATE_HOUR ? "HH" : ""}"
+        // Decide whether to display the hour dimension
+        def entryFormat = "yyyy-MM-dd${timeDimension == GA_DATE_HOUR ? "HH" : ""}"
 
         // Create the GetReportsRequest object.
-        def request = new GetReportsRequest(reportRequests: [
-                new ReportRequest(
-                        viewId: "178374466",
-                        dateRanges: [dateRange],
-                        metrics: [
-                                metric("ga:pageviews", "views"),
-                        ],
-                        dimensions: [
-                                dimension(timeDimension)
-                        ],
-                        dimensionFilterClauses: [
-                                filter("ga:pagePath", "EXACT", "/$pageName")
-                        ]
-                )
-        ])
+        def request = buildGetReportsRequest(pageName, GA_VIEW_ID, dateRange, timeDimension)
 
         // Fetch the report from google analytics
         def gaResponse = reportingService.reports().batchGet(request).execute()
 
-        def response = gaResponse.getReports()[0].getData().getRows().collect({ row ->
+        gaResponse.getReports()[0].getData().getRows().collect({ row ->
             [
                     Date.parse(outputFormat, row.getDimensions()[0]).format(entryFormat),
-                    [views: row.getMetrics()[0].getValues()[0]]
+                    row.getMetrics()[0].getValues()[0]
             ]
         }).collectEntries()
+    }
 
-        def sd = Date.parse("yyyy-MM-dd", dateRange.getStartDate())
-        def ed = Date.parse("yyyy-MM-dd", dateRange.getEndDate())
-        // TODO fill in zeroes for blank hours/days
-        return MapUtil.merge(response, (timeDimension == GA_DATE ?
-                emailRepositoy.getDailyEmailCounts(pageName, sd, ed)
-                : emailRepositoy.getHourlyEmailCounts(pageName, sd, ed))
-        .collect({
+    Map getEmailCounts(String pageName, DateRange dateRange, String timeDimension) {
+        emailRepositoy.getEmailCounts(
+                pageName,
+                Date.parse("yyyy-MM-dd", dateRange.getStartDate()),
+                Date.parse("yyyy-MM-dd", dateRange.getEndDate()),
+                timeDimension
+        ).collect({
             [
                     it.get("timestamp"),
-                    [emails: it.get("emails")]
+                    it.get("emails")
             ]
-        }).collectEntries())
-
-
-
+        }).collectEntries()
     }
+
 
     private static int getInterval(String dateString) {
         def entry = intervalFormats.find({ int interval, String format ->
@@ -123,6 +127,29 @@ class AnalyticsServiceImpl implements AnalyticsService {
                 endDate: new Date(c.getTimeInMillis()).format("yyyy-MM-dd")
         )
     }
+
+    static GetReportsRequest buildGetReportsRequest(
+            String pageName,
+            String viewId,
+            DateRange dateRange,
+            String timeDimension) {
+        new GetReportsRequest(reportRequests: [
+                new ReportRequest(
+                        viewId: viewId,
+                        dateRanges: [dateRange],
+                        metrics: [
+                                metric("ga:pageviews", "views"),
+                        ],
+                        dimensions: [
+                                dimension(timeDimension)
+                        ],
+                        dimensionFilterClauses: [
+                                filter("ga:pagePath", "EXACT", "/$pageName")
+                        ]
+                )
+        ])
+    }
+
 
     private static DimensionFilterClause filter(String dimensionName, String operatorName, String... expressions) {
         return new DimensionFilterClause(filters: [new DimensionFilter(

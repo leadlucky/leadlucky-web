@@ -1,0 +1,5 @@
+spring:
+  jpa:
+    database: h2
+
+ga-view-id: testviewid

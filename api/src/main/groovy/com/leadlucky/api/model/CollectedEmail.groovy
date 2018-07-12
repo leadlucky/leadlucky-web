@@ -29,7 +29,7 @@ class CollectedEmail {
 
     @PrePersist
     protected void onCreate(){
-        createdDate = new Date()
+        if(!createdDate)createdDate = new Date()
     }
 
 }

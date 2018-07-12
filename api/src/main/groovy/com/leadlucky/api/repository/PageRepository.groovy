@@ -1,11 +1,9 @@
 package com.leadlucky.api.repository
 
 import com.leadlucky.api.model.Page
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import org.springframework.data.repository.CrudRepository
 
-interface PageRepository extends JpaRepository<Page, Long> {
+interface PageRepository extends CrudRepository<Page, Long> {
 
 
     Optional<Page> findByName(String name)

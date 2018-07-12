@@ -40,7 +40,7 @@ dependencies {
 
 	// Database
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    compile("mysql:mysql-connector-java")
+    runtime("mysql:mysql-connector-java")
 
     // Stripe
     compile("com.stripe:stripe-java:5.36.0")
@@ -54,7 +54,9 @@ dependencies {
 
     // Test
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.junit.jupiter:junit-jupiter-api:5.0.0')
 	testCompile('org.springframework.security:spring-security-test')
+    testCompile('com.h2database:h2')
 
 
     //TODO remove

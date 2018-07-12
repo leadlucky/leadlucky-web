@@ -8,7 +8,8 @@ server:
       pattern: "%a,%t,%m,%U"
 
 ga-app-name: leadlucky-api
-ga-key-path: leadlucky-dev.json
+ga-view-id: 178374466
+ga-key-path: /Users/slandow/leadlucky-dev.json
 
 token-expiration: 864_000_000 # 10 days
 token-gen-secret: fj&F0f+=jfn2n2nf

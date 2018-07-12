@@ -7,7 +7,6 @@ import com.leadlucky.api.repository.PageRepository
 import com.leadlucky.api.repository.UserRepository
 import com.leadlucky.api.service.AnalyticsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -15,7 +14,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
-import javax.xml.ws.Response
 import java.text.ParseException
 
 @RestController
@@ -57,7 +55,7 @@ class PageController {
             )
         }
 
-        return ResponseEntity.ok(analyticsService.getPageViewReport(pageName, date))
+        return ResponseEntity.ok(analyticsService.getPageReport(pageName, date))
     }
 
 
