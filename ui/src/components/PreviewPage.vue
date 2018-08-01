@@ -1,5 +1,5 @@
 <script>
-  import themes from '../../../../themes'
+  import themes from '@leadlucky/leadlucky-themes';
 
   export default {
     name: "preview-page",

@@ -51,17 +51,19 @@ class UserServiceImpl implements UserService{
 
         validateAndUpdateUser(user)
 
-        // Send verification email
-        user.emailToken = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
-        user.emailVerified = false
-        user.premiumStatus = "unpaid"
+            // Send verification email
+            user.emailToken = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
+            user.emailVerified = false
+            user.premiumStatus = "unpaid"
 
-        mailSender.send(new SimpleMailMessage(
-                to: user.email,
-                from: emailAddress,
-                subject: signupSubject,
-                text: signupMessage.replace("{verifyurl}", "/verify?user=${user.username}&token=${user.emailToken}")
-        ))
+        if(emailAddress != null) {
+            mailSender.send(new SimpleMailMessage(
+                    to: user.email,
+                    from: emailAddress,
+                    subject: signupSubject,
+                    text: signupMessage.replace("{verifyurl}", "/verify?user=${user.username}&token=${user.emailToken}")
+            ))
+        }
 
         // Persist User
         userRepository.save(user)

@@ -75,7 +75,7 @@
   import axios from 'axios'
 
   import auth from '../auth'
-  import themes from '../../../../themes'
+  import themes from '@leadlucky/leadlucky-themes';
 
   import store from '../store';
 

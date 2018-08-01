@@ -11,7 +11,7 @@ class SecurityConstants {
     public static long EXPIRATION_TIME
 
     public static String LOGIN_URL = "/login"
-    public static String SIGNUP_URL = "/users/signUp"
+    public static String SIGNUP_URL = "/users/signup"
 
     public static List<String> UNSECURED_URLS = [
             LOGIN_URL,

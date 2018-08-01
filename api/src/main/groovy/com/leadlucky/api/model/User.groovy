@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.persistence.Table
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
@@ -20,7 +21,7 @@ class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id
+    long id
 
     @NotBlank
     @Size(min = 4, message = "Minimum password length: 4 characters")

@@ -6,7 +6,7 @@ import Coins from '../components/Coins'
 import EditPage from '../components/EditPage'
 import PageLegal from '../components/legal'
 import PagePrivacy from '../components/privacy'
-import themes from '../../../../themes'
+import themes from '@leadlucky/leadlucky-themes';
 import PageTemplates from '../components/PageTemplates'
 import PageAccount from '../components/PageAccount'
 import PageUpgrade from '../components/PageUpgrade'
