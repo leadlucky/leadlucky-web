@@ -56,7 +56,7 @@ class UserServiceImpl implements UserService{
             user.emailVerified = false
             user.premiumStatus = "unpaid"
 
-        if(emailAddress != null) {
+        if(emailAddress != "localhost@test.com") {
             mailSender.send(new SimpleMailMessage(
                     to: user.email,
                     from: emailAddress,
