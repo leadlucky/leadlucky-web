@@ -114,6 +114,18 @@
     props: {
       source: String
     },
+    computed: {
+      referName() {
+        const referrer = this.$route.params.referrer;
+
+        if(referrer != null){
+          const clean = referrer.replace(/[^a-z0-9]/gi,'');
+          return clean
+        }
+
+        return referrer
+      }
+    },
     methods: {
       submit() {
         const self = this;
@@ -135,7 +147,8 @@
           let data = JSON.stringify({
             username: this.credentials.username,
             password: this.credentials.password,
-            email: this.credentials.postEmail
+            email: this.credentials.postEmail,
+            referrer: self.referName
           });
 
           auth.signup(data, (success, message) =>{

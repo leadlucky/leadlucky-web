@@ -60,6 +60,11 @@ export default new Router({
       component: NewLogin
     },
     {
+      path: '/referral/:referrer',
+      name: 'NewLoginRefer',
+      component: NewLogin
+    },
+    {
       path: '/coins/:id',
       name: 'Coins',
       component: Coins

@@ -39,7 +39,6 @@ class UserController {
     @Autowired
     private PageRepository pageRepository
 
-
     @PostMapping("/signup")
     ResponseEntity registerUser(@RequestBody @Valid User user) {
         user.roles = [Role.ROLE_CLIENT] // Sanitize roles when doing normal registration
@@ -79,7 +78,7 @@ class UserController {
         // TODO - use web hooks to update this
         if (user.stripeCustomerId != null) {
             try {
-                Stripe.apiKey = "sk_test_XqjOE25ia1m5Kp4FRWZ78GR2"
+                Stripe.apiKey = "sk_live_XrB6CH0zfMw3EPSkfrMgJ3CK"
 
                 Customer stripeCustomer = Customer.retrieve(user.stripeCustomerId)
                 Subscription stripeSubscription = Subscription.retrieve(stripeCustomer.subscriptions.data.get(0).id)
@@ -101,7 +100,7 @@ class UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_PREMIUM')")
     String upgrade(@RequestBody ChargeDataDTO chargeDataDTO) {
 
-        Stripe.apiKey = "sk_test_XqjOE25ia1m5Kp4FRWZ78GR2"
+        Stripe.apiKey = "sk_live_XrB6CH0zfMw3EPSkfrMgJ3CK"
         Authentication auth = SecurityContextHolder.context.authentication
         User user = userRepository.findByUsername(auth.name)
                 .orElseThrow(CustomException.getUserNotFoundHandler(auth.name))
