@@ -33,6 +33,15 @@
             @change="saveTheme"/>
         </v-card-text>
       </v-card>
+      <br/>
+      <v-card>
+        <v-card-title>
+          <h3>Referral Settings</h3>
+        </v-card-title>
+        <v-card-text>
+          <h1>Balance: ${{userData.user.balance}}</h1>
+        </v-card-text>
+      </v-card>
     </v-container>
   </div>
 </template>
