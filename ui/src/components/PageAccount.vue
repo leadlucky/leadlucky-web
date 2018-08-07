@@ -39,6 +39,7 @@
           <h3>Referral Settings</h3>
         </v-card-title>
         <v-card-text>
+          <p>Your link (click to copy): <a @click="copyLink">{{refLink}}</a></p>
           <h1>Balance: ${{userData.user.balance}}</h1>
         </v-card-text>
       </v-card>
@@ -55,10 +56,12 @@
         userData: store.userData,
         portalData: store.portalData,
         premium: false,
+        refLink: ""
       }
     },
     created(){
       this.premium = store.userData.user.premiumStatus === 'active'
+      this.refLink = window.location.origin+'/#/referral/'+store.userData.user.username
     },
     methods: {
       saveTheme(){
@@ -66,6 +69,22 @@
       },
       premiumRedirect(){
         this.$router.history.push('/dashboard/upgrade')
+      },
+      copyLink(){
+        // Create a dummy input to copy the string array inside it
+        var dummy = document.createElement("input");
+        // Add it to the document
+        document.body.appendChild(dummy);
+        // Set its ID
+        dummy.setAttribute("id", "dummy_id");
+        // Output the array into it
+        document.getElementById("dummy_id").value=this.refLink;
+        // Select it
+        dummy.select();
+        // Copy its contents
+        document.execCommand("copy");
+        // Remove it as its not needed anymore
+        document.body.removeChild(dummy);
       }
     }
   }
