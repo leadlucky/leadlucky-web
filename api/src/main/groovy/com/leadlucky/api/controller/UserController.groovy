@@ -16,6 +16,7 @@ import com.stripe.exception.StripeException
 import com.stripe.model.Customer
 import com.stripe.model.Subscription
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -38,6 +39,12 @@ class UserController {
 
     @Autowired
     private PageRepository pageRepository
+
+    @Value('${stripe-private}')
+    private String stripePrivate
+
+    @Value('${stripe-public}')
+    private String stripePublic
 
     @PostMapping("/signup")
     ResponseEntity registerUser(@RequestBody @Valid User user) {
@@ -78,7 +85,7 @@ class UserController {
         // TODO - use web hooks to update this
         if (user.stripeCustomerId != null) {
             try {
-                Stripe.apiKey = "sk_live_XrB6CH0zfMw3EPSkfrMgJ3CK"
+                Stripe.apiKey = stripePrivate
 
                 Customer stripeCustomer = Customer.retrieve(user.stripeCustomerId)
                 Subscription stripeSubscription = Subscription.retrieve(stripeCustomer.subscriptions.data.get(0).id)
@@ -100,7 +107,7 @@ class UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_PREMIUM')")
     String upgrade(@RequestBody ChargeDataDTO chargeDataDTO) {
 
-        Stripe.apiKey = "sk_live_XrB6CH0zfMw3EPSkfrMgJ3CK"
+        Stripe.apiKey = stripePrivate
         Authentication auth = SecurityContextHolder.context.authentication
         User user = userRepository.findByUsername(auth.name)
                 .orElseThrow(CustomException.getUserNotFoundHandler(auth.name))
@@ -114,6 +121,11 @@ class UserController {
         customerParams.put("description", "Customer for LeadLucky")
         customerParams.put("source", chargeDataDTO.chargetoken) // obtained via Stripe.js
 
+        //Might want to use user.email otherwise tracking will be hard.
+        customerParams.put("email", chargeDataDTO.email) // obtained via Stripe.js
+        //customerParams.put("shipping", chargeDataDTO.shipping) // obtained via Stripe.js
+        String plan = chargeDataDTO.planId
+
         Customer customer
         Subscription subscription
 
@@ -123,7 +135,7 @@ class UserController {
                     "customer": customer.id,
                     "items"   : [
                             "0": [
-                                    "plan": "plan_Cvo76gkcgiAIMh"
+                                    "plan": plan
                             ]
                     ]
             ])
