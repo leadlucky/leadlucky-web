@@ -39,8 +39,10 @@
           <h3>Referral Settings</h3>
         </v-card-title>
         <v-card-text>
-          <p>Your link (click to copy): <a @click="copyLink">{{refLink}}</a></p>
-          <h1>Balance: ${{userData.user.balance}}</h1>
+          <v-flex class="text-xs-left">
+          <h2>Your link: <a @click="copyLink">{{refLink}}</a> (click to copy)</h2>
+          <h2>Balance: ${{userData.user.balance}}</h2>
+          </v-flex>
         </v-card-text>
       </v-card>
     </v-container>

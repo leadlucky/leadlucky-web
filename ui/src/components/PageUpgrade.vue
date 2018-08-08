@@ -21,11 +21,17 @@
         <h2>•Email & Funnel Marketing Tools (coming soon)</h2>
         <br/>
         <v-card-actions>
-          <v-flex xs12><v-btn color="info" @click="checkout">Upgrade
+          <v-flex xs12><v-btn color="info" @click="checkoutMonth">Upgrade
           <v-icon>add</v-icon>
           </v-btn></v-flex>
         </v-card-actions>
       </v-card>
+      <v-flex xs12><v-btn color="info" @click="checkout6Month">Upgrade6m
+        <v-icon>add</v-icon>
+      </v-btn></v-flex>
+      <v-flex xs12><v-btn color="info" @click="checkout12Month">Upgrade12m
+        <v-icon>add</v-icon>
+      </v-btn></v-flex>
     </v-flex>
   </div>
 </template>
@@ -68,13 +74,13 @@
             console.log(err)
           })
       },
-      checkout() {
+      checkoutMonth() {
         // this.$checkout.close()
         // is also available.
         this.$checkout.open({
-          name: '1 Month Subscription',
+          name: '1 Month Premium Subscription',
           currency: 'USD',
-          amount: 995,
+          amount: 1995,
           livemode: true,
           token: (token) => {
             // Send the token to your server
@@ -82,14 +88,69 @@
             // or do whatever you want with it
             // I don't really care.
             var usertoken = token.id
+            var useremail = token.email
+            //var useraddr = token.shippingAddress
             let data = JSON.stringify({
               chargetoken: usertoken,
-              email: "test@gmail.com"
+              email: useremail,
+              planId: 'plan_DNiHNgnvQq7PQJ'
             })
 
             axios.post(window.leadlucky.apiUrl+'users/upgrade', data, {headers: {"Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem('access_token')}
             }).then(function(response){
-              // TODO maybe handle success or errors?
+              window.location.reload(true);
+            });
+          }
+        });
+      },
+    checkout6Month() {
+      // this.$checkout.close()
+      // is also available.
+      this.$checkout.open({
+        name: '6 Month Premium Subscription',
+        currency: 'USD',
+        amount: 9000,
+        livemode: true,
+        token: (token) => {
+          // Send the token to your server
+          var usertoken = token.id
+          var useremail = token.email
+          //var useraddr = token.shippingAddress
+          let data = JSON.stringify({
+            chargetoken: usertoken,
+            email: useremail,
+            planId: 'plan_DNiH766kAWvsOe'
+          })
+
+          axios.post(window.leadlucky.apiUrl+'users/upgrade', data, {headers: {"Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem('access_token')}
+          }).then(function(response){
+            window.location.reload(true);
+          });
+        }
+      });
+    },
+      checkout12Month() {
+        // this.$checkout.close()
+        // is also available.
+        this.$checkout.open({
+          name: '12 Month Premium Subscription',
+          currency: 'USD',
+          amount: 14000,
+          livemode: true,
+          token: (token) => {
+            // Send the token to your server
+            var usertoken = token.id
+            var useremail = token.email
+            //var useraddr = token.shippingAddress
+            let data = JSON.stringify({
+              chargetoken: usertoken,
+              email: useremail,
+              planId: 'plan_DNiHFwWvG4ds03'
+            })
+
+            axios.post(window.leadlucky.apiUrl+'users/upgrade', data, {headers: {"Content-Type": "application/json", "Authorization": "Bearer " + localStorage.getItem('access_token')}
+            }).then(function(response){
+              window.location.reload(true);
             });
           }
         });
