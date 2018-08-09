@@ -128,6 +128,7 @@ class UserController {
 
         Customer customer
         Subscription subscription
+        long planPrice = 0
 
         try {
             customer = Customer.create(customerParams)
@@ -139,6 +140,7 @@ class UserController {
                             ]
                     ]
             ])
+            planPrice = (subscription.plan.amount * 0.2)/100
         } catch (StripeException e) {
             throw new CustomException(
                     message: "Error processing transaction with Stripe. Please try again later. ",
@@ -150,6 +152,17 @@ class UserController {
         user.roles.add(Role.ROLE_PREMIUM)
         user.premiumStatus = subscription.status
         userRepository.save(user)
+
+        if(user.referrer != null){
+        try{
+             User referrer = userRepository.findByUsername(user.referrer)
+            .orElseThrow(CustomException.getUserNotFoundHandler(user.referrer))
+             referrer.balance += planPrice
+            userRepository.save(referrer)
+        }catch(Exception e){
+            println("user not found error??")
+        }
+        }
 
         return "success"
     }
