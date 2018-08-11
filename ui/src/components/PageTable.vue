@@ -124,7 +124,7 @@
         return [
           [{name: 'Views', icon: 'user', color: 'info', value: 10000}],
           [{name: 'Emails', icon: 'envelope', color: 'danger', value: 7560}],
-          [{name: 'Conversions', icon: 'percent', color: 'warning', value: '75.6%'}]
+          [{name: 'Conversion Rate', icon: 'percent', color: 'warning', value: '75.6%'}]
         ]
       }
     },
