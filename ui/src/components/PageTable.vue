@@ -27,29 +27,26 @@
         <div class="col-md-3">
           <div class="row" v-for="items in infoCards">
             <div :class="`col col-md-${12 / items.length}`" v-for="item in items">
-              <div class="card">
-                <div class="media">
-                  <div class="media-left meida media-middle">
-                    <span><i :class="`fa fa-${item.icon} f-s-40 color-${item.color}`"></i></span>
-                  </div>
-                  <div class="media-body media-text-right">
-                    <h2>{{item.value}}</h2>
-                    <p class="m-b-0">{{item.name}}</p>
-                  </div>
-                </div>
-              </div>
+              <info-card
+                :name="item.name" :value="item.value"
+                :icon="item.icon" :color="item.color"/>
             </div>
           </div>
         </div>
       </div>
       <div class="card">
         <div class="card-body row">
-          <div class="col col-md-7">
+          <div class="col col-md-9">
             <h4 class="card-title">Page Viewer Devices</h4>
-            <div id="extra-area-chart"></div>
+            <area-chart
+              :data="chartData"
+              xkey="period"
+              :ykeys="['smartphone', 'windows', 'mac']"
+              :lineColors="['#62d1f3','#fc6180','#ffb64d']"
+              :labels="['iPhone', 'Android', 'Web']"
+            />
           </div>
-          <div class="col col-md-1"/>
-          <div class="col col-md-4 ">
+          <div class="col col-md-3 ">
             <p class="m-t-30 f-w-600">iPhone<span class="pull-right">65%</span></p>
             <div class="progress">
               <div role="progressbar" style="width: 65%; height:8px;"
@@ -68,6 +65,9 @@
                    class="progress-bar bg-warning wow animated progress-animated"><span
                 class="sr-only">60% Complete</span></div>
             </div>
+            <button class="btn btn-info btn-block" @click="genData()">
+              Update Data
+            </button>
           </div>
         </div>
       </div>
@@ -80,21 +80,22 @@
   import auth from '../auth'
   import store from '../store'
   import ElaTable from './ela/ElaTable'
+  import InfoCard from './ela/InfoCard'
+  import AreaChart from './ela/AreaChart'
 
   export default {
-    components: {ElaTable},
+    components: {ElaTable, AreaChart, InfoCard},
     created() {
       this.fetchData()
-    },
-    mounted() {
-      this.initChart()
+      this.genData()
     },
     data() {
       return {
         search: '',
         defaultUrl: '/#',
         premium: false,
-        pages: []
+        pages: [],
+        chartData: []
       }
     },
     computed: {
@@ -138,61 +139,19 @@
           console.log(err)
         })
       },
-      initChart() {
-        window.Morris.Area({
-          element: 'extra-area-chart',
-          data: [{
-            period: '2001',
-            smartphone: 0,
-            windows: 0,
-            mac: 0
-          }, {
-            period: '2002',
-            smartphone: 90,
-            windows: 60,
-            mac: 25
-          }, {
-            period: '2003',
-            smartphone: 40,
-            windows: 80,
-            mac: 35
-          }, {
-            period: '2004',
-            smartphone: 30,
-            windows: 47,
-            mac: 17
-          }, {
-            period: '2005',
-            smartphone: 150,
-            windows: 40,
-            mac: 120
-          }, {
-            period: '2006',
-            smartphone: 25,
-            windows: 80,
-            mac: 40
-          }, {
-            period: '2007',
-            smartphone: 10,
-            windows: 10,
-            mac: 10
-          }
-
-
-          ],
-          lineColors: ['#62d1f3', '#fc6180', '#ffb64d'],
-          xkey: 'period',
-          ykeys: ['smartphone', 'windows', 'mac'],
-          labels: ['iPhone', 'Android', 'Web'],
-          pointSize: 0,
-          lineWidth: 0,
-          resize: false,
-          fillOpacity: 0.8,
-          behaveLikeLine: true,
-          gridLineColor: '#e0e0e0',
-          hideHover: 'auto'
-
-        });
+      genData(){
+        this.chartData = [{
+          period: '2001',
+          smartphone: 0,
+          windows: 0,
+          mac: 0
+        }, ...['2002','2003','2005','2010','2018'].map((year) => ({
+          period: year,
+          smartphone: Math.floor((Math.random() * 100)),
+          windows: Math.floor((Math.random() * 100)),
+          mac: Math.floor((Math.random() * 100))
+        }))
+        ]
       },
       selectTheme(tableRow) {
         this.$router.push(`/dashboard/analytics/${tableRow.name}`)
