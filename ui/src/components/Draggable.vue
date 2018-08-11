@@ -1,9 +1,10 @@
 <template>
   <div ref="dragElement" class="draggable" :style="initialStyle">
-    <div @mousedown="beginDrag" style="background: #f0f0f0;">
-      : : :
-    </div>
-    <slot name="stuff"/>
+      <div @mousedown="beginDrag" style="background: #f0f0f0; border-top-left-radius: 5px; border-top-right-radius: 5px; margin: 0">
+        <br/>
+      </div>
+    <div style="margin: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; background: white;"><slot name="content"/></div>
+
   </div>
 </template>
 
@@ -13,6 +14,10 @@
   export default {
     name: "draggable",
     props: {
+      frames: {
+        type: Array,
+        default: () => []
+      },
       initialLeft: {
         type: Number,
         default: 0
@@ -87,7 +92,7 @@
         let offsetLeft = pxToNumber(el.style.left) - mouseX;
         let offsetTop = pxToNumber(el.style.top) - mouseY;
 
-        document.onmousemove = (e) => {
+        viewport.onmousemove = (e) => {
           mouseX = e.clientX;
           mouseY = e.clientY;
 
@@ -97,9 +102,9 @@
           el.style.top = (mouseY + offsetTop) + "px";
         };
 
-        document.onmouseup = () => {
-          document.onmouseup = null;
-          document.onmousemove = null;
+        viewport.onmouseup = () => {
+          window.onmouseup = null;
+          window.onmousemove = null;
           el.style.top = Math.max(pxToNumber(el.style.top), this.minY) + "px";
           el.style.left =
             pxToNumber(el.style.width) * .5 + pxToNumber(el.style.left) < this.minX ?

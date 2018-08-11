@@ -69,25 +69,23 @@ class UserController {
     @GetMapping(value = "/me")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT', 'ROLE_PREMIUM')")
     User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.context.authentication
-        String username = auth.name
+        def auth = SecurityContextHolder.context.authentication
+        def username = auth.name
 
-        User user = userRepository.findByUsername(username)
+        def user = userRepository.findByUsername(username)
                 .orElseThrow(CustomException.getUserNotFoundHandler(auth.name))
 
         // Refresh premium status, check if subscription is still active
         // TODO - use web hooks to update this
-        if (user.stripeCustomerId != null) {
+        if (user.info.stripeCustomerId != null) {
             try {
                 Stripe.apiKey = "sk_test_XqjOE25ia1m5Kp4FRWZ78GR2"
-
-                Customer stripeCustomer = Customer.retrieve(user.stripeCustomerId)
-                Subscription stripeSubscription = Subscription.retrieve(stripeCustomer.subscriptions.data.get(0).id)
-
-                user.premiumStatus = stripeSubscription.status
-
-                userRepository.save(user)
-
+                def stripeCustomer = Customer.retrieve(user.stripeCustomerId)
+                def stripeSubscription = Subscription.retrieve(stripeCustomer.subscriptions.data.get(0).id)
+                if (user.info.premiumStatus != stripeSubscription.status) {
+                    user.info.premiumStatus = stripeSubscription.status
+                    userRepository.save(user)
+                }
             } catch (Exception e) {
                 e.printStackTrace()
             }

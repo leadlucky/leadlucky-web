@@ -2,60 +2,37 @@ package com.leadlucky.api.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.ElementCollection
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.OneToMany
-import javax.persistence.Table
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.Pattern
 
-@Entity
 class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id
+    @JsonIgnore
+    String id
 
-    @NotBlank
-    @Size(min = 4, message = "Minimum password length: 4 characters")
-    @Column(unique = true, nullable = false)
+    @NotEmpty
     String username
 
-    @NotBlank
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Size(min = 8, message = "Minimum password length: 8 characters")
-    String password
-
-    @NotBlank
-    @Column(unique = true, nullable = false)
+    @NotEmpty
+    @Pattern(regexp = "(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])")
     String email
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotEmpty
+    String password
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    boolean emailVerified
+    UserInfo info = new UserInfo()
 
-    @JsonIgnore
-    String emailToken
-
-    @JsonIgnore
-    String stripeCustomerId
-
-    String premiumStatus
-
-    @ElementCollection(fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     List<Role> roles = []
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @JsonIgnore
+    @DBRef(lazy = true)
     List<Page> pages = []
 
-    void addPage(Page page) {
-        page.owner = this
-        this.pages.add(page)
-    }
 }

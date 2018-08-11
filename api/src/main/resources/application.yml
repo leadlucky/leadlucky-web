@@ -4,38 +4,26 @@ server:
   tomcat:
     accesslog:
       enabled: true
-      directory: /tmp/access_logs
+      directory: /tmp/log
       pattern: "%a,%t,%m,%U"
-
-ga-app-name: leadlucky-api
-ga-view-id: 178374466
-ga-key-path: /Users/slandow/leadlucky-dev.json
 
 token-expiration: 864_000_000 # 10 days
 token-gen-secret: fj&F0f+=jfn2n2nf
 
-signup-message: 'Welcome to Leadlucky. Please <a href="{verifyurl}">verify your email-address</a>.'
+signup-message: 'Welcome to Leadlucky. Please <a href="{verifyurl}">verify your email address</a>.'
 signup-subject: 'Welcome to Leadlucky!'
-email-address: steven@stlcomputerservices.com
+email-address: localhost@test.com
 
 spring:
-  datasource:
-      url: jdbc:mysql://localhost:3306/leadlucky
-      username: root
-      password: root
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
-        id:
-          new_generator_mappings: false
   mail:
     host: smtp.gmail.com
     port: 587
-    username: steven@stlcomputerservices.com
+    username: localhost@test.com
     password:
     protocol: smtp
-
+  data:
+    mongodb:
+      database: leadlucky
+      username: ll-dev
+      password: l0calmach1ne
+      host: localhost

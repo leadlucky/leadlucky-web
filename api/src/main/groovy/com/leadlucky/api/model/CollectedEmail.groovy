@@ -2,34 +2,29 @@ package com.leadlucky.api.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.domain.Persistable
 
 import javax.persistence.*
 import java.util.Date
 
-@Entity
-class CollectedEmail {
+class CollectedEmail implements Persistable<String>{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    long id
+    String id
 
-    @Column(nullable = false)
+    @JsonIgnore
+    String pageName
+
     String email
 
-    String gaClientId
-
+    @CreatedDate
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Date createdDate
 
-    @ManyToOne
-    @JsonIgnore
-    Page page
-
-    @PrePersist
-    protected void onCreate(){
-        if(!createdDate)createdDate = new Date()
+    @Override
+    boolean isNew() {
+        return createdDate == null
     }
 
 }

@@ -18,7 +18,7 @@ class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     JWTAuthorizationFilter(
             AuthenticationManager authManager,
             UserDetailsService userDetailsService
-        ) {
+    ) {
         super(authManager)
         this.userDetailsService = userDetailsService
     }
@@ -45,19 +45,14 @@ class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING)
-        if (token != null) {
-            // parse the token.
-            String username = JwtUtil.parseForUsername(token)
-
-            if (username != null) {
-                return new UsernamePasswordAuthenticationToken(
+        // parse the token.
+        String username = JwtUtil.parseForUsername(token)
+        return username ?
+                new UsernamePasswordAuthenticationToken(
                         username,
                         null,
                         userDetailsService.loadUserByUsername(username).authorities
                 )
-            }
-            return null
-        }
-        return null
+                : null
     }
 }

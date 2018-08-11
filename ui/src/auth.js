@@ -12,28 +12,27 @@ export default {
 
 
   // Send a request to the login URL and save the returned JWT
-  login(creds, callback) {
-    axios.post(LOGIN_URL, creds, {headers: {"Content-Type": "application/json"}}).then(res => {
+  login(username, password, callback) {
+    axios.post(LOGIN_URL, {username, password}).then(res => {
       localStorage.setItem('id_token', res.data);
       localStorage.setItem('access_token', res.data);
 
-      window.location.href = window.location.href+"dashboard";
       callback(true)
     }).catch(error => {
       callback(
         false,
         (error.response && error.response.data && error.response.data.message)
+        || (error.response.status === 401 && "Invalid login attempt. ")
         || error.message
       )
     });
   },
 
-  signup(creds, callback) {
-    axios.post(SIGNUP_URL, creds, {headers: {"Content-Type": "application/json"}}).then(res => {
+  signup(username, password, email, callback) {
+    axios.post(SIGNUP_URL, {username, password, email}, {headers: {"Content-Type": "application/json"}}).then(res => {
       localStorage.setItem('id_token', res.data);
       localStorage.setItem('access_token', res.data);
 
-      window.location.href = window.location.href+"dashboard";
       callback(true)
     }).catch(error => {
       callback(

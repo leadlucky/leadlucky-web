@@ -1,8 +1,6 @@
 package com.leadlucky.api.service
 
 import com.google.api.services.analyticsreporting.v4.AnalyticsReporting
-import com.google.api.services.analyticsreporting.v4.AnalyticsReporting.Reports
-import com.google.api.services.analyticsreporting.v4.AnalyticsReporting.Reports.BatchGet
 import com.google.api.services.analyticsreporting.v4.model.DateRange
 import com.leadlucky.api.model.CollectedEmail
 import com.leadlucky.api.model.Page
@@ -12,9 +10,7 @@ import com.leadlucky.api.service.impl.AnalyticsServiceImpl
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.BeforeAll
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,16 +19,10 @@ import org.springframework.test.context.junit4.SpringRunner
 
 import static com.leadlucky.api.service.impl.AnalyticsServiceImpl.getDateRange
 import static junit.framework.TestCase.assertEquals
-import static org.junit.Assert.fail
-import static org.mockito.Mockito.when
-import static org.mockito.internal.util.MockUtil.resetMock
 
 @RunWith(SpringRunner)
 @SpringBootTest
 class AnalyticsService_UT {
-
-    @Value('${ga-view-id}')
-    private String GA_VIEW_ID
 
     @MockBean
     private AnalyticsReporting reportingService
@@ -62,6 +52,7 @@ class AnalyticsService_UT {
         ))
 
         emailRepository.saveAll([
+                "2016-01-01 12:00": "olditem@testreport.net",
                 "2018-01-01 12:00": "daylong@testreport.net",
                 "2018-01-01 16:00": "daylong2@testreport.net",
                 "2018-01-15 12:00": "monthlong@testreport.net",
@@ -90,9 +81,22 @@ class AnalyticsService_UT {
     /* TODO test for a month long views report */
     /* TODO test for a day long views report */
 
+
+    @Test
+    void getEmailCountsAllTime() {
+        assert analyticsService.getPageEmailCounts(
+                PAGE_NAME,
+                new DateRange(startDate: "2010-01-01", endDate: new Date().format("yyyy-MM-dd")),
+                AnalyticsServiceImpl.GA_YEAR
+        ) == [
+                "2016": 1,
+                "2018": 4
+        ]
+    }
+
     @Test
     void getEmailCountsForYear() {
-        assert analyticsService.getEmailCounts(
+        assert analyticsService.getPageEmailCounts(
                 PAGE_NAME,
                 YEAR_RANGE,
                 AnalyticsServiceImpl.GA_DATE
@@ -106,7 +110,7 @@ class AnalyticsService_UT {
     @Test
     void getEmailCountsForMonth() {
         // For some reason assertEquals says identical maps are a failure...
-        assert analyticsService.getEmailCounts(
+        assert analyticsService.getPageEmailCounts(
                 PAGE_NAME,
                 MONTH_RANGE,
                 AnalyticsServiceImpl.GA_DATE
@@ -118,13 +122,13 @@ class AnalyticsService_UT {
 
     @Test
     void getEmailCountsForDay() {
-        println analyticsService.getEmailCounts(
+        println analyticsService.getPageEmailCounts(
                 PAGE_NAME,
                 DAY_RANGE,
                 AnalyticsServiceImpl.GA_DATE_HOUR
         )
 
-        assert analyticsService.getEmailCounts(
+        assert analyticsService.getPageEmailCounts(
                 PAGE_NAME,
                 DAY_RANGE,
                 AnalyticsServiceImpl.GA_DATE_HOUR

@@ -34,12 +34,13 @@
       }
     },
     render(createElement) {
-      return createElement(this.component, {
+      return createElement('div',{}, [createElement(this.component, {
         props: {propData: Object.assign({}, this.customData), themeName: this.themeName},
         attrs: {
-          style: `padding: 0 0 0 0;`
+          style: `padding: 0 0 0 0; margin-left: 0`
         }
-      })
+      })])
+
     }
   }
 </script>

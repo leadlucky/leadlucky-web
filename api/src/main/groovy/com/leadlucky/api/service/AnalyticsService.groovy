@@ -24,7 +24,7 @@ interface AnalyticsService {
      * @param timeDimension either GA_DATE or GA_DATE_HOUR for daily or hourly granularity
      * @return map of timestamp to view counts
      */
-    Map getViewCounts(String pageName, DateRange dateRange, String timeDimension)
+    Map getPageViewCounts(String pageName, DateRange dateRange, String timeDimension)
 
     /***
      * @param pageName name of the page to query counts for
@@ -32,6 +32,6 @@ interface AnalyticsService {
      * @param timeDimension either GA_DATE or GA_DATE_HOUR for daily or hourly granularity
      * @return map of timestamp to email counts
      */
-    Map getEmailCounts(String pageName, DateRange dateRange, String timeDimension)
+    Map getPageEmailCounts(String pageName, DateRange dateRange, String timeDimension)
 
 }

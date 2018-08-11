@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 
 class AuthUtil {
 
-    static Authentication getAuthContext() {
+    static Authentication getAuth() {
         return SecurityContextHolder.getContext().authentication
     }
 
@@ -15,14 +15,14 @@ class AuthUtil {
     }
 
     static void validateAdminAccess() {
-        Authentication auth = getAuthContext()
+        Authentication auth = getAuth()
         if (!hasAdminAccess(auth)) {
             throw new AccessDeniedException("${auth.name} does not have admin role.")
         }
     }
 
     static void validateAccessToUser(String username) {
-        Authentication auth = getAuthContext()
+        Authentication auth = getAuth()
         if (username != auth.name && !hasAdminAccess(auth)) {
             throw new AccessDeniedException("${auth.name} does not have access to ${username}")
         }

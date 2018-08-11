@@ -52,16 +52,18 @@ class UserServiceImpl implements UserService{
         validateAndUpdateUser(user)
 
             // Send verification email
-            user.emailToken = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
-            user.emailVerified = false
-            user.premiumStatus = "unpaid"
+            user.info.with {
+                emailToken = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
+                emailVerified = false
+                premiumStatus = "unpaid"
+            }
 
         if(emailAddress != "localhost@test.com") {
             mailSender.send(new SimpleMailMessage(
                     to: user.email,
                     from: emailAddress,
                     subject: signupSubject,
-                    text: signupMessage.replace("{verifyurl}", "/verify?user=${user.username}&token=${user.emailToken}")
+                    text: signupMessage.replace("{verifyurl}", "/verify?user=${user.username}&token=${user.info.emailToken}")
             ))
         }
 
@@ -114,8 +116,8 @@ class UserServiceImpl implements UserService{
         return userRepository.findAll(new PageRequest(page, length)).toList()
     }
 
-    private void validateAndUpdateUser(User User) {
-        if(!PasswordUtil.isUsernameValid(User.username)) {
+    private void validateAndUpdateUser(User user) {
+        if(!PasswordUtil.isUsernameValid(user.username)) {
             throw new CustomException(
                     message: "Username must between ${PasswordUtil.MIN_USERNAME}" +
                     " and ${PasswordUtil.MAX_USERNAME} characters and " +
@@ -124,7 +126,7 @@ class UserServiceImpl implements UserService{
             )
         }
 
-        if (!PasswordUtil.isPasswordValid(User.password)) {
+        if (!PasswordUtil.isPasswordValid(user.password)) {
             throw new CustomException(
                     message: "Password must be between ${PasswordUtil.MIN_PASSWORD}" +
                     " and ${PasswordUtil.MAX_PASSWORD} characters," +
@@ -134,7 +136,7 @@ class UserServiceImpl implements UserService{
             )
         }
 
-        User.password = bCryptPasswordEncoder.encode(User.getPassword())
+        user.password = bCryptPasswordEncoder.encode(user.getPassword())
     }
 
     private User findExistingUser(String username) {
