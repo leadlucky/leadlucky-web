@@ -17,7 +17,7 @@ export default {
       localStorage.setItem('id_token', res.data);
       localStorage.setItem('access_token', res.data);
 
-      window.location.href = window.location.href+"dashboard";
+      window.location.href = "/#/dashboard";
       callback(true)
     }).catch(error => {
       callback(
@@ -33,7 +33,7 @@ export default {
       localStorage.setItem('id_token', res.data);
       localStorage.setItem('access_token', res.data);
 
-      window.location.href = window.location.href+"dashboard";
+      window.location.href = "/#/dashboard";
       callback(true)
     }).catch(error => {
       callback(

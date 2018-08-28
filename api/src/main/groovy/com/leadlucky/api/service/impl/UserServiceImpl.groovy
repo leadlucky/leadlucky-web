@@ -55,6 +55,7 @@ class UserServiceImpl implements UserService{
             user.emailToken = UUID.randomUUID().toString().replaceAll("-", "").toLowerCase()
             user.emailVerified = false
             user.premiumStatus = "unpaid"
+            user.balance = 0
 
         if(emailAddress != "localhost@test.com") {
             mailSender.send(new SimpleMailMessage(

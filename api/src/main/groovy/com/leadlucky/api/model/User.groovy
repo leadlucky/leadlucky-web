@@ -48,6 +48,11 @@ class User {
 
     String premiumStatus
 
+    String referrer
+
+    @Column(nullable = false)
+    double balance
+
     @ElementCollection(fetch = FetchType.EAGER)
     List<Role> roles = []
 

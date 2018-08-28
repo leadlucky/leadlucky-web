@@ -6,4 +6,8 @@ class ChargeDataDTO {
 
     String email
 
+    String planId
+
+    //String shipping
+
 }
