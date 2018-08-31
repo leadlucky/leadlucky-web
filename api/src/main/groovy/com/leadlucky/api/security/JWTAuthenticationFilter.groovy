@@ -2,7 +2,9 @@ package com.leadlucky.api.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.leadlucky.api.exception.CustomException
 import com.leadlucky.api.model.User
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -28,13 +30,15 @@ class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                          HttpServletResponse res) throws AuthenticationException {
         try {
             User credential = new ObjectMapper().readValue(req.getInputStream(), User)
-
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(credential.username, credential.password, [])
-            )
+            if ((credential?.username && credential?.password))
+                return authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(credential.username, credential.password, [])
+                )
+            else
+                throw new CustomException(httpStatus: HttpStatus.UNAUTHORIZED, message: "Empty credential. ")
         } catch (IOException e) {
-            if(!(e instanceof MismatchedInputException))
-              throw new RuntimeException(e)
+            if (!(e instanceof MismatchedInputException))
+                throw e
         }
     }
 

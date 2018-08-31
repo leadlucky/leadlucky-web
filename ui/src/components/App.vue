@@ -1,19 +1,50 @@
 <template>
-  <v-app :dark="portalData.darkTheme" class="leadlucky-app" v-if="userData.user">
-    <SideNav :visible="drawer && !portalData.fullscreen"></SideNav>
-    <v-toolbar v-if="!portalData.fullscreen" app fixed clipped-left>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>LeadLucky</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn @click="logout" round color="blue darken-3" class="white--text" to="/">
-        Logout
-        <v-icon right dark>account_circle</v-icon>
-      </v-btn>
-    </v-toolbar>
-    <v-content>
+  <body :class="`fix-header fix-sidebar ${portalData.miniSidebar ? 'mini-sidebar' : ''}`">
+  <link href="/static/css/style.css" rel="stylesheet">
+  <div id="main-wrapper">
+    <div class="header is_stuck" style="position: fixed; top: 0px; width: 2560px;">
+      <nav class="navbar top-navbar navbar-expand-md navbar-light" style="padding-right: 30px">
+        <!-- Logo -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.html">
+          </a>
+        </div>
+        <!-- End Logo -->
+        <div class="navbar-collapse">
+          <!-- toggle and nav items -->
+          <ul class="navbar-nav mr-auto mt-md-0">
+            <li @click="portalData.miniSidebar = !portalData.miniSidebar" class="nav-item m-l-10">
+              <a class="nav-link sidebartoggler hidden-sm-down text-muted ">
+                <i class="ti-menu"/>
+              </a>
+            </li>
+          </ul>
+          <!-- User profile and search -->
+          <ul class="navbar-nav my-lg-0">
+            <!-- Profile -->
+            <li class="nav-item dropdown">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="ti-user" style="margin-right: 10px"/>{{currentUsername}} <i class="fa fa-caret-down"/>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right animated slide-down">
+                <ul class="dropdown-user">
+                  <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                  <li @click="logout"><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div
+      style="position: relative; width: 2560px; height: 56px; display: block; vertical-align: baseline; float: none;"></div>
+    <SideNav/>
+    <div class="page-wrapper" style="min-height: 733px; padding-bottom: 0">
       <router-view></router-view>
-    </v-content>
-  </v-app>
+    </div>
+  </div>
+  </body>
 </template>
 
 
@@ -42,27 +73,22 @@
     created() {
       const router = this.$router;
       auth.refreshAuth((user) => {
-        if(!user){
+        if (!user) {
           router.history.push('/')
         }
       });
-
     },
     methods: {
       logout() {
         auth.logout()
+        this.$router.history.push('/')
+      }
+    },
+    computed: {
+      currentUsername(){
+        return this.userData.user ? this.userData.user.username : "loading...";
       }
     }
   }
 </script>
 
-<style>
-  .leadlucky-app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-  /*margin-top: 60px;*/
-  }
-</style>

@@ -28,13 +28,6 @@ class PublicInfoController {
                     httpStatus: HttpStatus.NOT_FOUND)
         })
 
-        // Extract client IP Address from request
-        String ipAddress = req.getHeader("X-FORWARDED-FOR")
-        if (ipAddress == null)
-            ipAddress = req.remoteAddr
-
-
-
         return ResponseEntity
                 .ok()
                 .header("Content-Type", "application/json")
@@ -51,9 +44,7 @@ class PublicInfoController {
             new CustomException(
                     message: "No page found with name " + pageName,
                     httpStatus: HttpStatus.NOT_FOUND)
-        }
-        )
-
+        })
 
         page.addEmail(email)
         pageRepository.save(page)

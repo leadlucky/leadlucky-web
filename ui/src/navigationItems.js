@@ -8,17 +8,17 @@ export default [
   },
   {
     name: "Create Page",
-    icon: "create",
+    icon: "pencil",
     route: "/dashboard/themes",
   },
   {
     name: "Settings",
-    icon: "settings",
+    icon: "sliders",
     route: "/dashboard/account"
   },
   {
     name: "Upgrade",
-    icon: "payment",
+    icon: "arrow-up",
     route: "/dashboard/upgrade",
     condition: () => store.userData.user.premiumStatus !== 'active'
   }

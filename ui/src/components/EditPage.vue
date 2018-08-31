@@ -1,69 +1,47 @@
 <template>
-  <div ref="dragArea">
-    <PreviewPage
-      :themeName="$route.params.themeName"
-      :customData="pageData"
-      :fullscreen="portalData.fullscreen"
-      :forceUpdate="flipper"/>
-    <draggable :style="`opacity: ${controls ? 1 : 0.2};`" :initial-top="128" :initial-right="16" :width="450" :min-y="64">
-      <v-card slot="stuff" style="max-height: 55vh; overflow-y: scroll;">
-        <v-card-actions>
-          <v-switch label="Fullscreen" v-model="portalData.fullscreen"></v-switch>
-          <v-switch label="Controls" v-model="controls"></v-switch>
-        </v-card-actions>
-        <v-stepper v-model="stepperStep" v-if="controls">
-          <v-stepper-header>
-            <v-stepper-step step="1" :complete="stepperStep > 1" editable>Edit Page Info</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step step="2" :complete="stepperStep > 2" editable>Set Page Details</v-stepper-step>
-          </v-stepper-header>
-          <v-stepper-items>
-            <v-stepper-content step="1">
-              <v-form v-model="valid">
-                <span
-                    v-for="fieldName in Object.keys(currentDataContracts)"
-                    :key="`edit-${fieldName}`">
-                  <v-switch v-if="currentDataContracts[fieldName].type === Boolean && isFieldEnabled(fieldName)"
-                            :label="currentDataContracts[fieldName].name"
-                            v-model="pageData[fieldName]"
-                            @change="updatePageData(fieldName, $event)"/>
-                  <v-text-field v-else-if="isFieldEnabled(fieldName)"
-                                :label="currentDataContracts[fieldName].name"
-                                @input="updatePageData(fieldName, $event)"
-                                :value="pageData[fieldName]"
-                                :prefix="currentDataContracts[fieldName].prefix"
-                                :rules="required(currentDataContracts[fieldName].name)"
-                                required>
-                  </v-text-field>
-                </span>
-              </v-form>
-              <v-btn color="primary" @click.native="stepperStep = 2" :disabled="!valid">Continue</v-btn>
-              <v-btn flat to="/">Cancel</v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="2">
-              <v-text-field
-                label="Redirect Url"
-                v-model="redirectUrl"
-                :rules="urlRule"
-                required
-              ></v-text-field>
-              <v-form v-model="valid">
-                <v-text-field
-                  label="Page Id"
-                  v-model="pageid"
-                  :rules="pageIdRule"
-                  prefix="/"
-                  required
-                ></v-text-field>
-                <p class="text-xs-left" v-text="errorText" style="color: red"></p>
-              </v-form>
-              <v-btn v-if="stepperStep === 2" flat @click="stepperStep = 1">back</v-btn>
-              <v-btn color="primary" @click.native="createPage" :disabled="!valid">Submit</v-btn>
-            </v-stepper-content>
-          </v-stepper-items>
-        </v-stepper>
-      </v-card>
-    </draggable>
+  <div style="height: 100%; width: 100%; padding: 0;" class="container-fluid">
+    <div class="row" style="height: 100%">
+      <iframe ref="previewFrame" class="col-md-9" :style="`padding: 0; border: none; width: 100%; `"
+              :src="`/#/${$route.params.themeName}`"></iframe>
+      <div class="card col-md-3" style="max-height: 100%;margin: 0; overflow-y: scroll; padding: 0">
+
+        <ela-tab :titles="['Page Info', 'Customize']">
+          <div slot="content-0" class="col">
+            <div class="form-group">
+              <label>Page ID </label>
+              <ela-input
+                v-model="pageId.value"
+                :validationError="pageId.validator(pageId.value)"
+                type="text"
+                placeholder="yourPageName"/>
+            </div>
+            <div class="form-group">
+              <label>Redirect URL</label>
+              <ela-input
+                v-model="redirectUrl.value"
+                :validationError="redirectUrl.validator(redirectUrl.value)"
+                type="text"
+                placeholder="https://www.yoursite.com/productpage"/>
+            </div>
+          </div>
+          <div slot="content-1" class="col col">
+            <div class="form-group" v-for="(f, i) in Object.keys(currentDataContracts)" v-if="isFieldEnabled(f)">
+              <label>{{currentDataContracts[f].name}}</label>
+              <ela-input
+                v-if="currentDataContracts[f].type == String"
+                v-model="pageData[f]"
+                type="text"
+                :placeholder="currentDataContracts[f].placeholder || ''"/>
+              <input
+                v-if="currentDataContracts[f].type == Boolean"
+                v-model="pageData[f]"
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </ela-tab>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -71,34 +49,45 @@
   import PreviewPage from './PreviewPage';
   import Draggable from "./Draggable";
 
-  import {validationMixin}  from '@leadlucky/leadlucky-themes';
+  import {validationMixin} from '@leadlucky/leadlucky-themes';
   import axios from 'axios'
 
   import auth from '../auth'
   import themes from '@leadlucky/leadlucky-themes';
 
   import store from '../store';
+  import ElaInput from './ela/ElaInput.vue';
+  import ElaTab from './ela/ElaTab.vue';
 
   export default {
     name: 'EditPage',
     mixins: [validationMixin],
     components: {
       Draggable,
-      PreviewPage
+      PreviewPage,
+      ElaInput,
+      ElaTab
     },
     mounted() {
       this.loadDefaults();
     },
     data() {
       return {
+        dumdum: 'fff',
         // Stepper & Form
         valid: false,
         stepperStep: 1,
         errorText: '',
         //User Input
         pageData: {},
-        redirectUrl: 'https://google.com',
-        pageid: 'mySite',
+        redirectUrl: {
+          value: '',
+          validator: validationMixin.urlRule
+        },
+        pageId: {
+          value: '',
+          validator: validationMixin.required('Page ID')
+        },
         // Editor Display
         controls: true,
         flipper: false,
@@ -111,15 +100,27 @@
       }
     },
     watch: {
+      pageData: {
+        handler(n, _){
+          const iframeWindow =  this.$refs.previewFrame.contentWindow;
+          iframeWindow.postMessage(
+            {customData: this.pageData},
+            iframeWindow.origin
+          )
+        },
+        deep: true
+      },
       $route() {
         this.loadDefaults()
       }
     },
     methods: {
-      isFieldEnabled(fieldName){
-
+      getEditorHeight() {
+        return (this.$refs.editor ? this.$refs.editor.clientHeight : 0)
+      },
+      isFieldEnabled(fieldName) {
         return this.currentDataContracts[fieldName].dependsOn ?
-            this.pageData[this.currentDataContracts[fieldName].dependsOn] : true
+          this.pageData[this.currentDataContracts[fieldName].dependsOn] : true
       },
       updatePageData(fieldName, value) {
         console.log(`${fieldName}: ${value}`)
@@ -128,18 +129,18 @@
       }
       ,
       loadDefaults() {
-        this.pageData = {};
-        const self = this;
+        let newPageData = {};
         Object.keys(this.currentDataContracts).forEach(fieldName => {
-          self.pageData[fieldName] = this.currentDataContracts[fieldName].default
-        })
-      }
-      ,
+          const chunk = {}
+          newPageData[fieldName] = this.currentDataContracts[fieldName].default
+        });
+        this.pageData = newPageData
+      },
       createPage() {
         let payload = {
-          name: this.pageid,
+          name: this.pageId.value,
           themeName: this.$route.params.themeName,
-          data: JSON.stringify(Object.assign({redirectUrl: this.redirectUrl},this.pageData))
+          data: JSON.stringify(Object.assign({redirectUrl: this.redirectUrl}, this.pageData))
         };
 
         const self = this;
@@ -154,7 +155,7 @@
           }
         });
       }
-      ,
+
     }
   }
 </script>

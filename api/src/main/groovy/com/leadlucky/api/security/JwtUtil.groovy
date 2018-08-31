@@ -1,12 +1,8 @@
 package com.leadlucky.api.security
 
-import com.leadlucky.api.exception.CustomException
-import com.leadlucky.api.model.User
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import org.springframework.http.HttpStatus
-import org.springframework.security.core.Authentication
 
 class JwtUtil {
 
@@ -23,14 +19,11 @@ class JwtUtil {
         try {
             Jwts.parser()
                     .setSigningKey(SecurityConstants.SECRET.getBytes())
-                    .parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                    .parseClaimsJws(token?.replace(SecurityConstants.TOKEN_PREFIX, ""))
                     .getBody()
                     .getSubject()
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new CustomException(
-                    message: "Expired or invalid JWT token",
-                    httpStatus: HttpStatus.UNAUTHORIZED
-            )
+        } catch (JwtException | IllegalArgumentException ignore) {
+            return null
         }
     }
 
