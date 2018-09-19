@@ -12,17 +12,15 @@
         <!-- End Logo -->
         <div class="navbar-collapse">
           <!-- toggle and nav items -->
-          <ul class="navbar-nav mr-auto mt-md-0">
+          <ul class="navbar-nav mr-0 mt-md-0">
             <li @click="portalData.miniSidebar = !portalData.miniSidebar" class="nav-item m-l-10">
               <a class="nav-link sidebartoggler hidden-sm-down text-muted ">
                 <i class="ti-menu"/>
               </a>
             </li>
           </ul>
-          <!-- User profile and search -->
-          <ul class="navbar-nav my-lg-0">
-            <!-- Profile -->
-            <li class="nav-item dropdown">
+          <ul class="navbar-nav mr-auto mt-md-0" style="margin-right: 1000px; margin-left: auto">
+            <li class="nav-item dropdown m-l-10" >
               <a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ti-user" style="margin-right: 10px"/>{{currentUsername}} <i class="fa fa-caret-down"/>
               </a>
@@ -34,6 +32,7 @@
               </div>
             </li>
           </ul>
+
         </div>
       </nav>
     </div>

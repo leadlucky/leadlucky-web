@@ -12,6 +12,7 @@ import PageAccount from '../components/PageAccount'
 import PageUpgrade from '../components/PageUpgrade'
 import PageTable from '../components/PageTable'
 import Analytics from '../components/Analytics'
+import Home from '../components/Home'
 
 Vue.use(Router);
 
@@ -56,6 +57,11 @@ export default new Router({
     },
     {
       path: '/',
+      name: 'Home',
+      component: Home
+    },
+    {
+      path: '/login',
       name: 'NewLogin',
       component: NewLogin
     },

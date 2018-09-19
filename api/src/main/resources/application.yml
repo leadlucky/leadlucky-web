@@ -14,6 +14,10 @@ signup-message: 'Welcome to Leadlucky. Please <a href="{verifyurl}">verify your 
 signup-subject: 'Welcome to Leadlucky!'
 email-address: localhost@test.com
 
+stripe-public: fake
+stripe-private: fake
+
+
 spring:
   mail:
     host: smtp.gmail.com

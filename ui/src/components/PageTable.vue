@@ -89,6 +89,9 @@
       this.fetchData()
       this.genData()
     },
+    mounted(){
+      setTimeout(() => this.genData(), 500)
+    },
     data() {
       return {
         search: '',
