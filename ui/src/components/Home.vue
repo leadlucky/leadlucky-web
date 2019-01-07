@@ -5,10 +5,33 @@
     </div>
     <div class="row banner-image">
       <div class="banner-content">
-        <h1>Homepage</h1>
-        <h4>Hey. You should buy our shit. </h4>
+        <h1>Sign Up!</h1>
+        <h4>Hey. Click Here to make an account. </h4>
       </div>
     </div>
+    <br/>
+
+    <section class="feature-area section-gap" id="feature">
+      <div class="container">
+        <div class="row">
+          <div class="single-feature col-lg-4">
+            <img class="img-fluid" src="https://colorlib.com/preview/theme/callcenter/img/f1.png" alt="">
+            <h4>Online Support</h4>
+            <p>Lorem ipsum dolor sit amet, consecteturadipis icing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <div class="single-feature col-lg-4">
+            <img class="img-fluid" src="https://colorlib.com/preview/theme/callcenter/img/f2.png" alt="">
+            <h4>24/7 Round the Clock</h4>
+            <p>Lorem ipsum dolor sit amet, consecteturadipis icing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <div class="single-feature col-lg-4">
+            <img class="img-fluid" src="https://colorlib.com/preview/theme/callcenter/img/f2.png" alt="">
+            <h4>Handling All Issues</h4>
+            <p>Lorem ipsum dolor sit amet, consecteturadipis icing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </div>
 </template>
@@ -21,10 +44,6 @@
   body {
     margin: 0 !important;
   }
-
-
-
-
 
   .homepage-container {
     margin-left: 0;
@@ -49,9 +68,11 @@
 
   .banner-content {
     color: white;
-    background-color: #888888aa;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,0.44861694677871145) 0%, rgba(79,79,222,0.9023984593837535) 5%, rgba(152,238,255,1) 100%);
     padding: 20px;
     margin: 10vh 16vw auto auto;
+    border-radius: 15px;
 
     animation: slideInFromLeft 700ms;
   }

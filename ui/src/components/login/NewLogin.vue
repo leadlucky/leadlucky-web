@@ -65,21 +65,22 @@
 
 <script>
   import auth from '../../auth'
-  import {validationMixin} from '@leadlucky/leadlucky-themes'
+  import validationMixin from '@leadlucky/leadlucky-themes/src/mixins/validationMixin'
   import ElaInput from '../ela/ElaInput.vue'
 
-
   export default {
+    mixins: [validationMixin],
     components: {ElaInput},
     mounted() {
       this.passwordConfirm.validator = (v) => v && v === this.password.value ? null : "Passwords must match"
     },
-    data: function () {
+    data: function() {
+
       return {
-        username: {value: "", validator: validationMixin.required('Username')},
-        password: {value: "", validator: validationMixin.passwordRules},
+        username: {value: "", validator: validationMixin.required('Username')[0]},
+        password: {value: "", validator: validationMixin.passwordRules[0]},
         passwordConfirm: {value: "", validator: 'x'},
-        email: {value: "", validator: validationMixin.emailRules},
+        email: {value: "", validator: validationMixin.emailRules[0]},
         register: false,
         message: null,
         error: false
