@@ -4,7 +4,7 @@
       <div class="home-nav-logo col-3"><br/></div>
     </div>
     <div class="row banner-image">
-      <div class="banner-content">
+      <div class="banner-content" @click="login()">
         <h1>Sign Up!</h1>
         <h4>Hey. Click Here to make an account. </h4>
       </div>
@@ -37,7 +37,12 @@
 </template>
 <script>
   export default {
-    name: "home"
+    name: "home",
+    methods: {
+      login(){
+        window.location = window.origin + "/#/login";
+      }
+    }
   }
 </script>
 <style scoped="true" lang="css">

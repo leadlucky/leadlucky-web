@@ -2,8 +2,8 @@
   <body :class="`fix-header fix-sidebar ${portalData.miniSidebar ? 'mini-sidebar' : ''}`">
   <link href="/static/css/style.css" rel="stylesheet">
   <div id="main-wrapper">
-    <div class="header is_stuck" style="position: fixed; top: 0px; width: 2560px;">
-      <nav class="navbar top-navbar navbar-expand-md navbar-light" style="padding-right: 30px">
+    <div class="header is_stuck" style="position: fixed; top: 0px; width: 100%">
+      <nav class="navbar top-navbar navbar-expand-md navbar-light" style="padding-right: 10px">
         <!-- Logo -->
         <div class="navbar-header">
           <a class="navbar-brand" href="index.html">
@@ -19,14 +19,14 @@
               </a>
             </li>
           </ul>
-          <ul class="navbar-nav mr-auto mt-md-0" style="margin-right: 1000px; margin-left: auto">
+          <ul class="navbar-nav mt-md-0" style="margin-left: auto">
             <li class="nav-item dropdown m-l-10" >
               <a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ti-user" style="margin-right: 10px"/>{{currentUsername}} <i class="fa fa-caret-down"/>
               </a>
               <div class="dropdown-menu dropdown-menu-right animated slide-down">
                 <ul class="dropdown-user">
-                  <li><a href="#"><i class="ti-user"></i> Profile</a></li>
+                  <li><a href="/#/dashboard/account"><i class="ti-user"></i> Profile</a></li>
                   <li @click="logout"><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
                 </ul>
               </div>
@@ -37,7 +37,7 @@
       </nav>
     </div>
     <div
-      style="position: relative; width: 2560px; height: 56px; display: block; vertical-align: baseline; float: none;"></div>
+      style="position: relative; width: 100%; height: 56px; display: block; vertical-align: baseline; float: none;"></div>
     <SideNav/>
     <div class="page-wrapper" style="min-height: 733px; padding-bottom: 0">
       <router-view></router-view>

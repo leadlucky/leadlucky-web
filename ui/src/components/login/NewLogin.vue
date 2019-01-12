@@ -1,5 +1,5 @@
 <template>
-  <div id="main-wrapper">
+  <div id="main-wrapper" v-bind:style="{ 'background-image': 'url(' + picture + ')', 'background-size': 'cover' }">
     <link href="/static/css/style.css" rel="stylesheet">
     <div class="unix-login">
       <div class="container-fluid">
@@ -83,7 +83,8 @@
         email: {value: "", validator: validationMixin.emailRules[0]},
         register: false,
         message: null,
-        error: false
+        error: false,
+        picture: "/static/images/testblueback.jpg"
       }
     },
     computed: {

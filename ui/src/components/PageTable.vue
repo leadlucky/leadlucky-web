@@ -1,14 +1,11 @@
 <template>
   <div>
-    <div class="row page-titles" style="position: fixed; width: 100%;">
+    <div class="row page-titles" style="width: 100%; margin-bottom: 0px">
       <div class="col-md-12s align-self-center">
         <h3 class="text-primary">Dashboard</h3>
       </div>
     </div>
-    <div class="container-fluid">
-      <div class="row" style="height: 56px">
-        <!-- Spacer -->
-      </div>
+    <div class="container-fluid" style="padding-bottom: 0px">
       <div class="row tallboi">
         <div class="col-md-9" style="padding-bottom: 30px">
           <div class="card tallboi">
@@ -34,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" style="margin-bottom: 0px">
         <div class="card-body row">
           <div class="col col-md-9">
             <h4 class="card-title">Page Viewer Devices</h4>

@@ -82,11 +82,11 @@
         pageData: {},
         redirectUrl: {
           value: '',
-          validator: validationMixin.urlRule
+          validator: validationMixin.urlRule[0]
         },
         pageId: {
           value: '',
-          validator: validationMixin.required('Page ID')
+          validator: validationMixin.required('Page ID')[0]
         },
         // Editor Display
         controls: true,
