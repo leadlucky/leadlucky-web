@@ -103,7 +103,7 @@
       act() {
         const errors = [this.username, this.password, ...(this.register ? [this.passwordConfirm, this.email] : [])]
           .map((f) => f.validator(f.value)).filter((e) => e);
-        if (errors.length > 0) {
+      if (errors.length > 0) {
           this.message = errors.join(", ");
           this.error = true;
           return;

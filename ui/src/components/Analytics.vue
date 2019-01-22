@@ -196,7 +196,6 @@
         const rows = [...new Array(dayMode ? 24 : daysInMonth(month, year)).keys()].map(u => {
           let ts = `${year}-${pad(month, 2)}-${pad(dayMode ? day : u + 1, 2)}`;
           if (dayMode) ts += ` ${pad(u, 2)}:00`
-          debugger;
           return [
             dayMode ? `${pad(u, 2)}:00` : `${month}/${u + 1}`,
             (this.chartData.value[ts] || {}).views || 0,
